@@ -35,8 +35,7 @@ func routeHeart(c *gin.Context) {
 
 func listStudents(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "List students",
-		"data":    students,
+		"data": students,
 	})
 	c.Done()
 }
@@ -100,6 +99,33 @@ func updateStudent(c *gin.Context) {
 	c.Done()
 }
 
+func deleteStudent(c *gin.Context) {
+	id, err := strconv.Atoi(c.Params.ByName("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid id",
+		})
+		c.Done()
+		return
+	}
+
+	for i, s := range students {
+		if s.ID == id {
+			students = append(students[:i], students[i+1:]...)
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Student deleted",
+			})
+			c.Done()
+			return
+		}
+	}
+
+	c.JSON(http.StatusNotFound, gin.H{
+		"message": "Student not found",
+	})
+	c.Done()
+}
+
 func getRoutes(c *gin.Engine) *gin.Engine {
 	c.GET("/heart", routeHeart)
 
@@ -107,6 +133,7 @@ func getRoutes(c *gin.Engine) *gin.Engine {
 	groupStudents.GET("/", listStudents)
 	groupStudents.POST("/", createStudent)
 	groupStudents.PUT("/:id", updateStudent)
+	groupStudents.DELETE("/:id", deleteStudent)
 
 	return c
 }
