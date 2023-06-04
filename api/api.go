@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 
+	student_controller "github.com/MogLuiz/students-api/api/controller/students"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,7 @@ func New() *Service {
 
 func (s *Service) GetRoutes() {
 	students := s.Engine.Group("/students")
-	students.GET("/", listStudents)
+	students.GET("/", student_controller.List)
 }
 
 func (s *Service) Start() error {
