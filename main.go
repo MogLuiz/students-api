@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/MogLuiz/students-api/shared"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/swaggo/gin-swagger/example/basic/api"
 )
 
 type Student struct {
@@ -21,10 +21,8 @@ var students = []Student{
 }
 
 func main() {
-	fmt.Println("Starting server...")
-	r := gin.Default()
-	r = getRoutes(r)
-	r.Run(":8080")
+	s := api.New()
+	s.Start()
 }
 
 func listStudents(c *gin.Context) {
