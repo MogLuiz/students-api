@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,11 +51,51 @@ func createStudent(c *gin.Context) {
 		c.Done()
 		return
 	}
-	student.ID = len(students) + 1
+	student.ID = students[len(students)-1].ID + 1
 	students = append(students, student)
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student created",
 		"data":    student,
+	})
+	c.Done()
+}
+
+func updateStudent(c *gin.Context) {
+	var student Student
+
+	id, err := strconv.Atoi(c.Params.ByName("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid id",
+		})
+		c.Done()
+		return
+	}
+
+	err = c.BindJSON(&student)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid data",
+		})
+		c.Done()
+		return
+	}
+
+	for i, s := range students {
+		if s.ID == id {
+			students[i] = student
+			students[i].ID = id
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Student updated",
+				"data":    students[i],
+			})
+			c.Done()
+			return
+		}
+	}
+
+	c.JSON(http.StatusNotFound, gin.H{
+		"message": "Student not found",
 	})
 	c.Done()
 }
@@ -65,6 +106,7 @@ func getRoutes(c *gin.Engine) *gin.Engine {
 	groupStudents := c.Group("/students")
 	groupStudents.GET("/", listStudents)
 	groupStudents.POST("/", createStudent)
+	groupStudents.PUT("/:id", updateStudent)
 
 	return c
 }
