@@ -3,20 +3,21 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
+	"github.com/MogLuiz/students-api/shared"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Student struct {
-	ID       int    `json:"id"`
-	FullName string `json:"full_name"`
-	Age      int    `json:"age"`
+	ID       uuid.UUID `json:"id"`
+	FullName string    `json:"full_name"`
+	Age      int       `json:"age"`
 }
 
 var students = []Student{
-	{ID: 1, FullName: "John", Age: 20},
-	{ID: 2, FullName: "Mary", Age: 22},
+	{ID: shared.GetID(), FullName: "John", Age: 20},
+	{ID: shared.GetID(), FullName: "Mary", Age: 22},
 }
 
 func main() {
@@ -24,13 +25,6 @@ func main() {
 	r := gin.Default()
 	r = getRoutes(r)
 	r.Run(":8080")
-}
-
-func routeHeart(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Ok",
-	})
-	c.Done()
 }
 
 func listStudents(c *gin.Context) {
@@ -50,7 +44,7 @@ func createStudent(c *gin.Context) {
 		c.Done()
 		return
 	}
-	student.ID = students[len(students)-1].ID + 1
+	student.ID = shared.GetID()
 	students = append(students, student)
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student created",
@@ -62,7 +56,7 @@ func createStudent(c *gin.Context) {
 func updateStudent(c *gin.Context) {
 	var student Student
 
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	id, err := shared.ConvertStringToUUId(c.Params.ByName("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid id",
@@ -100,7 +94,7 @@ func updateStudent(c *gin.Context) {
 }
 
 func deleteStudent(c *gin.Context) {
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	id, err := shared.ConvertStringToUUId(c.Params.ByName("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid id",
@@ -127,7 +121,7 @@ func deleteStudent(c *gin.Context) {
 }
 
 func showStudent(c *gin.Context) {
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	id, err := shared.ConvertStringToUUId(c.Params.ByName("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid id",
@@ -153,8 +147,6 @@ func showStudent(c *gin.Context) {
 }
 
 func getRoutes(c *gin.Engine) *gin.Engine {
-	c.GET("/heart", routeHeart)
-
 	groupStudents := c.Group("/students")
 	groupStudents.GET("/", listStudents)
 	groupStudents.GET("/:id", showStudent)
