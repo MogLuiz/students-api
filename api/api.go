@@ -18,6 +18,7 @@ func New() *Service {
 func (s *Service) GetRoutes() {
 	students := s.Engine.Group("/students")
 	students.GET("/", student_controller.List)
+	students.POST("/", student_controller.Create)
 }
 
 func (s *Service) Start() error {
