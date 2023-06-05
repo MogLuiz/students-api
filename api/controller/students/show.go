@@ -3,8 +3,8 @@ package students
 import (
 	"net/http"
 
-	"github.com/MogLuiz/students-api/entity"
 	"github.com/MogLuiz/students-api/entity/shared"
+	student_useCase "github.com/MogLuiz/students-api/usecase/student"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,18 +18,17 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	for _, s := range entity.Students {
-		if s.ID == id {
-			c.JSON(http.StatusOK, gin.H{
-				"data": s,
-			})
-			c.Done()
-			return
-		}
+	s, hasStudent := student_useCase.SearchById(id)
+	if !hasStudent {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "Student not found",
+		})
+		c.Done()
+		return
 	}
 
-	c.JSON(http.StatusNotFound, gin.H{
-		"message": "Student not found",
+	c.JSON(http.StatusOK, gin.H{
+		"data": s,
 	})
 	c.Done()
 }
