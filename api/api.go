@@ -20,6 +20,7 @@ func (s *Service) GetRoutes() {
 	students.GET("/", student_controller.List)
 	students.POST("/", student_controller.Create)
 	students.PUT("/:id", student_controller.Update)
+	students.DELETE("/:id", student_controller.Delete)
 }
 
 func (s *Service) Start() error {
