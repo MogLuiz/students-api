@@ -1,6 +1,9 @@
 package students
 
+import "github.com/google/uuid"
+
 type StudentInputDTO struct {
-	FullName string `json:"full_name"`
-	Age      int    `json:"age"`
+	ID       uuid.UUID `json:"id"`
+	FullName string    `json:"full_name"`
+	Age      int       `json:"age"`
 }

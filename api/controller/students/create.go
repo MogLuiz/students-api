@@ -19,7 +19,7 @@ func Create(c *gin.Context) {
 	}
 
 	student := entity.CreateStudent(dto.FullName, dto.Age)
-	entity.Students = append(entity.Students, student)
+	entity.Students = append(entity.Students, *student)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student created",

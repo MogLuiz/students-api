@@ -16,8 +16,8 @@ var Students = []Student{
 	{ID: shared.GetID(), FullName: "Mary", Age: 22},
 }
 
-func CreateStudent(fullName string, age int) Student {
-	return Student{
+func CreateStudent(fullName string, age int) *Student {
+	return &Student{
 		ID:       shared.GetID(),
 		FullName: fullName,
 		Age:      age,

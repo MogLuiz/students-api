@@ -19,6 +19,7 @@ func (s *Service) GetRoutes() {
 	students := s.Engine.Group("/students")
 	students.GET("/", student_controller.List)
 	students.POST("/", student_controller.Create)
+	students.PUT("/:id", student_controller.Update)
 }
 
 func (s *Service) Start() error {
