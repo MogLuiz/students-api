@@ -3,8 +3,8 @@ package students
 import (
 	"net/http"
 
-	"github.com/MogLuiz/students-api/entity"
 	"github.com/MogLuiz/students-api/entity/shared"
+	student_usecase "github.com/MogLuiz/students-api/usecase/student"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,19 +18,17 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	for i, s := range entity.Students {
-		if s.ID == id {
-			entity.Students = append(entity.Students[:i], entity.Students[i+1:]...)
-			c.JSON(http.StatusOK, gin.H{
-				"message": "Student deleted",
-			})
-			c.Done()
-			return
-		}
+	err = student_usecase.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "Student not found",
+		})
+		c.Done()
+		return
 	}
 
-	c.JSON(http.StatusNotFound, gin.H{
-		"message": "Student not found",
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Student deleted",
 	})
 	c.Done()
 }

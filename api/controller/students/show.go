@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/MogLuiz/students-api/entity/shared"
-	student_useCase "github.com/MogLuiz/students-api/usecase/student"
+	student_usecase "github.com/MogLuiz/students-api/usecase/student"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +18,7 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	s, hasStudent := student_useCase.SearchById(id)
+	s, hasStudent := student_usecase.SearchById(id)
 	if !hasStudent {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Student not found",
