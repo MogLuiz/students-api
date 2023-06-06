@@ -18,7 +18,14 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	student := student_usecase.Create(dto.FullName, dto.Age)
+	student, err := student_usecase.Create(dto.FullName, dto.Age)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Internal server error",
+		})
+		c.Done()
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student created",
