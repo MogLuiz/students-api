@@ -3,7 +3,7 @@ package students
 import (
 	"net/http"
 
-	"github.com/MogLuiz/students-api/entity"
+	student_usecase "github.com/MogLuiz/students-api/usecase/student"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +18,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	student := entity.CreateStudent(dto.FullName, dto.Age)
-	entity.Students = append(entity.Students, *student)
+	student := student_usecase.Create(dto.FullName, dto.Age)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student created",
