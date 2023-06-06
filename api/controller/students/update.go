@@ -5,6 +5,7 @@ import (
 
 	"github.com/MogLuiz/students-api/entity"
 	"github.com/MogLuiz/students-api/entity/shared"
+	student_usecase "github.com/MogLuiz/students-api/usecase/student"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,21 +29,19 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	for i, s := range entity.Students {
-		if s.ID == id {
-			entity.Students[i] = studentDTO
-			entity.Students[i].ID = id
-			c.JSON(http.StatusOK, gin.H{
-				"message": "Student updated",
-				"data":    entity.Students[i],
-			})
-			c.Done()
-			return
-		}
+	err, updatedStudent := student_usecase.Update(id, studentDTO)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "Student not found",
+		})
+		c.Done()
+		return
 	}
 
-	c.JSON(http.StatusNotFound, gin.H{
-		"message": "Student not found",
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Student updated",
+		"data":    updatedStudent,
 	})
 	c.Done()
+
 }
