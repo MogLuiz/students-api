@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	student_controller "github.com/MogLuiz/students-api/api/controller/students"
+	"github.com/MogLuiz/students-api/infra/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,10 +27,10 @@ func (s *Service) GetRoutes() {
 
 func (s *Service) Start() error {
 	s.GetRoutes()
-	err := s.Run(":8080")
+	err := s.Run(fmt.Sprintf(":%d", config.Env.PORT))
 	if err != nil {
 		return err
 	}
-	fmt.Println("Starting server on port 8080")
+
 	return nil
 }
