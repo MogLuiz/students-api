@@ -1,10 +1,13 @@
 package main
 
 import (
+	"log"
+
 	"github.com/MogLuiz/students-api/api"
 )
 
 func main() {
-	s := api.New()
-	s.Start()
+	if err := api.New().Start(); err != nil {
+		log.Fatal(err)
+	}
 }
