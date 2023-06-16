@@ -6,7 +6,9 @@ import (
 )
 
 type Config struct {
-	PORT int `envconfig:"PORT"`
+	PORT          int    `envconfig:"PORT"`
+	MongoURL      string `envconfig:"MONGO_URL"`
+	MongoDatabase string `envconfig:"MONGO_DATABASE"`
 }
 
 var Env Config
