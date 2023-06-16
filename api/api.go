@@ -5,15 +5,17 @@ import (
 
 	student_controller "github.com/MogLuiz/students-api/api/controller/students"
 	"github.com/MogLuiz/students-api/infra/config"
+	"github.com/MogLuiz/students-api/infra/database"
 	"github.com/gin-gonic/gin"
 )
 
 type Service struct {
-	*gin.Engine
+	Engine   *gin.Engine
+	Database *database.Database
 }
 
-func New() *Service {
-	return &Service{gin.Default()}
+func New(db *database.Database) *Service {
+	return &Service{Engine: gin.Default(), Database: db}
 }
 
 func (s *Service) GetRoutes() {
@@ -27,7 +29,7 @@ func (s *Service) GetRoutes() {
 
 func (s *Service) Start() error {
 	s.GetRoutes()
-	err := s.Run(fmt.Sprintf(":%d", config.Env.PORT))
+	err := s.Engine.Run(fmt.Sprintf(":%d", config.Env.PORT))
 	if err != nil {
 		return err
 	}
