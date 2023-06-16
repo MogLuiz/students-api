@@ -21,3 +21,7 @@ func GetConnection(ctx context.Context) (*mongo.Client, error) {
 
 	return client, nil
 }
+
+func GetCollection(ctx context.Context, client *mongo.Client, collectionName string) *mongo.Collection {
+	return client.Database(config.Env.MongoDatabase).Collection(collectionName)
+}
