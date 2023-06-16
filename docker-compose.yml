@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  students-api:
+    container_name: students-api
+    image: golang:1.18
+    volumes:
+      - .:/go/src
+    ports:
+      - 8080:8080
+    command: tail -f "/dev/null"
+
+  mongo:
+    container_name: mongo
+    image: mongo:5.0.10
+    ports:
+      - 27017:27017
+    volumes:
+      - .database:/data/db
